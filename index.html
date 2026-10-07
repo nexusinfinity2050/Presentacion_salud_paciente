@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salud en WhatsApp: atención hospitalaria con agentes de IA</title>
+<style>
+:root{--bg:#0c3b3a;--bg2:#0a2f2e;--ink:#f3f7f4;--mut:#a9c9c3;--g:#25d366;--bub:#dcf8c6;--amb:#ffb938;--card:#124b49;--chat:#ece5dd}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:"Trebuchet MS",Verdana,sans-serif;background:var(--bg2);color:var(--ink);line-height:1.5}
+.stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;overflow:hidden;background:var(--bg)}
+section{position:absolute;inset:0;display:none;padding:34px 56px 60px;align-items:center;gap:40px;background:var(--bg)}
+section.on{display:flex}
+section:nth-child(even){background:var(--bg2)}
+.t{flex:1.1;max-width:60ch}
+.v{flex:1;display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+h1{font-size:50px;line-height:1.1;margin-bottom:1rem}
+h2{font-size:36px;line-height:1.15;margin-bottom:1rem}
+p,li{font-size:18px;color:var(--mut)}
+p{margin-bottom:.8rem}
+strong{color:var(--ink)}
+ul{padding-left:1.1rem}li{margin-bottom:.5rem}
+.big{font-size:22px;color:var(--ink)}
+.tag{display:inline-block;background:var(--amb);color:#2b1d00;padding:.3rem .8rem;border-radius:99px;font-weight:bold;margin-bottom:1rem}
+.phone{width:268px;background:#111;border-radius:30px;padding:10px;box-shadow:0 14px 40px #0008}
+.scr{background:var(--chat);border-radius:22px;overflow:hidden;color:#222;min-height:430px;display:flex;flex-direction:column}
+.hd{background:#075e54;color:#fff;padding:10px 12px;font-size:.85rem;display:flex;gap:8px;align-items:center}
+.av{width:30px;height:30px;border-radius:50%;background:var(--g);display:grid;place-items:center;font-size:1rem}
+.msgs{padding:10px;display:flex;flex-direction:column;gap:7px;flex:1}
+.b{max-width:85%;padding:7px 10px;border-radius:10px;font-size:.82rem;background:#fff;color:#222;line-height:1.35;box-shadow:0 1px 1px #0002}
+.b.me{align-self:flex-end;background:var(--bub)}
+.b small{display:block;color:#667;font-size:.68rem;margin-top:3px}
+.voz{display:flex;align-items:center;gap:6px}
+.voz i{width:3px;background:#075e54;border-radius:2px;display:inline-block}
+.btn{display:block;margin-top:6px;background:#e7f3ff;color:#0a58b5;text-align:center;padding:5px;border-radius:7px;font-weight:bold;font-size:.78rem}
+.btn.r{background:#ffe3e0;color:#b3261e}
+.cap{width:100%;text-align:center;font-size:.85rem;color:var(--mut);margin-top:-8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;flex:1}
+.c{background:var(--card);border-radius:14px;padding:16px;border-left:5px solid var(--g)}
+.c h3{font-size:1.05rem;margin-bottom:.3rem}.c p{font-size:.92rem;margin:0}
+.c.a{border-color:var(--amb)}
+.flow{display:flex;flex-direction:column;gap:10px;flex:1}
+.st{background:var(--card);border-radius:14px;padding:14px 16px;display:flex;gap:14px;align-items:center}
+.st b{font-size:1.8rem}.st span{font-size:.95rem;color:var(--mut)}.st strong{display:block;font-size:1.05rem}
+.col{flex-direction:column;align-items:flex-start}
+.road{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;width:100%;margin-top:1rem}
+.nav{position:fixed;right:14px;bottom:12px;display:flex;gap:8px;align-items:center;z-index:5;color:var(--mut);font-size:14px}
+.nav button{width:42px;height:42px;border-radius:50%;border:0;background:var(--g);color:#06301a;font-size:1.3rem;font-weight:bold;cursor:pointer}
+button:focus-visible{outline:3px solid var(--amb);outline-offset:2px}
+@media print{html,body{overflow:visible;height:auto}.stage{position:static;transform:none!important;width:auto;height:auto}section{position:static;display:flex!important;width:1280px;height:720px;page-break-after:always}.nav{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+#s6 .c{padding:10px 12px}#s6 .c p{font-size:.8rem}#s6 .grid{grid-template-columns:repeat(6,1fr);gap:10px}#s6 h2{font-size:30px;margin-bottom:.5rem}.idn .b{font-size:.74rem;padding:5px 9px}.idn .msgs{padding:8px;gap:5px}
+#s2 .grid{grid-template-columns:1fr 1fr;gap:10px}#s2 .c p{font-size:.85rem}
+.b strong{color:#111}.col{max-width:none;width:100%}
+#s6 .t{flex:1}#s6 .c h3{font-size:.95rem}#s6 .phone{padding:8px}
+.dg{width:100%}.dg h2{font-size:30px;margin-bottom:12px}
+.row{display:flex;align-items:stretch;gap:8px}
+.col2{flex:1;background:var(--card);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:7px}
+.col2>h3{font-size:.95rem;text-align:center;color:var(--amb);margin-bottom:2px}
+.nd{background:var(--bg2);border-radius:10px;padding:7px 8px;font-size:.78rem;color:var(--mut);display:flex;gap:7px;align-items:center;line-height:1.25}
+.nd b{font-size:1.5rem;font-weight:normal}.nd strong{display:block;font-size:.84rem}
+.nd.g{border-left:4px solid var(--g)}.nd.y{border-left:4px solid var(--amb)}
+.ar{align-self:center;font-size:1.7rem;color:var(--g)}
+.core{flex:1.25;border:2px solid var(--g)}
+.base{margin-top:10px;display:flex;gap:8px}
+.base div{flex:1;background:#0f4240;border:1px dashed var(--mut);border-radius:10px;padding:7px 10px;font-size:.78rem;color:var(--mut);text-align:center}
+.base strong{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="stage" id="st">
+
+<section id="s1">
+ <div class="t">
+  <span class="tag">Proyecto de salud digital</span>
+  <h1>Su cita médica, con solo hablar por WhatsApp</h1>
+  <p class="big">Agentes de inteligencia artificial que atienden por voz, imágenes y mensajes cortos, para que ningún paciente quede fuera por no saber leer o escribir.</p>
+  <p>Hospital y centros de salud · Sin descargar nada · Sin formularios</p>
+ </div>
+ <div class="v">
+  <div class="phone"><div class="scr">
+   <div class="hd"><div class="av">🏥</div><div><strong>Hospital · Asistente</strong><br><small>en línea</small></div></div>
+   <div class="msgs">
+    <div class="b">👋 Hola, soy el asistente del hospital. Puede <strong>enviarme un audio</strong>. ¿En qué le ayudo?</div>
+    <div class="b me"><div class="voz">▶ <i style="height:8px"></i><i style="height:16px"></i><i style="height:11px"></i><i style="height:20px"></i><i style="height:9px"></i><i style="height:15px"></i><i style="height:7px"></i> 0:07</div><small>"Me duele la rodilla, quiero un doctor"</small></div>
+    <div class="b">🦴 Le consigo cita con <strong>Traumatología</strong>.<div class="voz">🔊 <i style="height:10px"></i><i style="height:18px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:10px"></i> 0:09</div></div>
+   </div>
+  </div></div>
+ </div>
+ <p class="cap" style="display:none"></p>
+</section>
+
+<section id="s2">
+ <div class="t">
+  <h2>El problema: la salud existe, pero el acceso no</h2>
+  <ul>
+   <li>Muchas personas <strong>no leen ni escriben con soltura</strong>, y los portales y apps exigen ambas cosas.</li>
+   <li>Las filas empiezan de madrugada para conseguir una ficha.</li>
+   <li>El call center satura las líneas, y no sirve a personas sordas.</li>
+   <li>Descargar una app, crear usuario y clave es una barrera real.</li>
+  </ul>
+ </div>
+ <div class="grid">
+  <div class="c a"><h3>📱 Lo que sí usan</h3><p>WhatsApp: ya está en su teléfono y saben mandar audios, fotos y ubicación.</p></div>
+  <div class="c a"><h3>🎙️ Lo más natural</h3><p>Hablar. Un audio de 10 segundos reemplaza un formulario entero.</p></div>
+  <div class="c a"><h3>🖼️ Lo más claro</h3><p>Imágenes, íconos y botones grandes en vez de párrafos de texto.</p></div>
+  <div class="c a"><h3>👪 Lo más común</h3><p>Un familiar o vecino ayuda con el celular: la solución debe ser simple para ambos.</p></div>
+  <div style="grid-column:1/-1;display:flex;gap:12px;align-items:stretch;flex-wrap:wrap">
+   <div class="c" style="flex:1;min-width:150px;border-color:#e8574b;text-align:center"><div style="font-size:2.4rem">🌙🚶‍♂️🚶‍♀️🚶</div><h3>Antes</h3><p>Fila desde la madrugada para una ficha</p></div>
+   <div style="align-self:center;font-size:2rem">➜</div>
+   <div class="c" style="flex:1;min-width:150px;text-align:center"><div style="font-size:2.4rem">🎙️📱🎫</div><h3>Ahora</h3><p>Un audio en casa y la ficha llega al chat</p></div>
+  </div>
+ </div>
+ <div class="phone" style="flex:none"><div class="scr" style="min-height:0">
+  <div class="hd"><div class="av">🏥</div><strong>Hospital · Asistente</strong></div>
+  <div class="msgs">
+   <div class="b me"><div class="voz">▶ <i style="height:10px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:9px"></i> 0:06</div><small>"Quiero ficha para mi hijo"</small></div>
+   <div class="b">👶 <strong>Pediatría</strong><br>🎫 Su ficha: <strong>Nº 12</strong><br>⏱️ Venga a las 9:30
+    <div class="voz">🔊 <i style="height:10px"></i><i style="height:18px"></i><i style="height:8px"></i><i style="height:14px"></i> 0:08</div></div>
+   <div class="b">🔔 Mañana le recordamos con un audio.</div>
+  </div>
+ </div></div>
+</section>
+
+<section id="s3">
+ <div class="t">
+  <h2>La solución: un equipo de agentes de IA en un solo chat</h2>
+  <p>El paciente ve <strong>un solo contacto de WhatsApp</strong>. Detrás, agentes especializados se reparten el trabajo y se conectan con el sistema del hospital.</p>
+ </div>
+ <div class="flow">
+  <div class="st"><b>🗣️</b><div><strong>Agente de escucha</strong><span>Convierte audio a texto (en español y lenguas locales) y entiende la intención.</span></div></div>
+  <div class="st"><b>🩺</b><div><strong>Agente de orientación</strong><span>Sugiere especialidad. No diagnostica. Detecta emergencias.</span></div></div>
+  <div class="st"><b>📅</b><div><strong>Agente de citas y fichas</strong><span>Reserva, reprograma, cancela y entrega el turno.</span></div></div>
+  <div class="st"><b>📍</b><div><strong>Agente de ubicación</strong><span>Encuentra el centro más cercano desde la ubicación enviada.</span></div></div>
+  <div class="st"><b>🧑‍💼</b><div><strong>Traspaso a una persona</strong><span>Siempre disponible: llamada o chat con personal del hospital.</span></div></div>
+ </div>
+</section>
+
+<section id="s4">
+ <div class="t">
+  <h2>Así se ve: de un audio a una cita confirmada</h2>
+  <ul>
+   <li>Responde <strong>con voz y con imágenes</strong>, no solo texto.</li>
+   <li>Pocas opciones por mensaje, botones grandes, un solo paso a la vez.</li>
+   <li>Confirma repitiendo la cita en audio y con tarjeta ilustrada.</li>
+   <li>Recordatorio automático el día anterior, con audio.</li>
+  </ul>
+ </div>
+ <div class="v">
+  <div class="phone"><div class="scr">
+   <div class="hd"><div class="av">🏥</div><strong>Hospital · Asistente</strong></div>
+   <div class="msgs">
+    <div class="b">🦴 Traumatología. ¿Cuándo puede venir?
+     <span class="btn">📅 Mañana · 9:00</span><span class="btn">📅 Jueves · 14:30</span></div>
+    <div class="b me">Mañana 👍</div>
+    <div class="b">✅ <strong>Cita confirmada</strong><br>👨‍⚕️ Dr. Ramírez<br>🗓️ Mañana · 9:00<br>🏥 Consulta externa, piso 2<br>📄 Lleve su carnet
+     <div class="voz">🔊 <i style="height:10px"></i><i style="height:18px"></i><i style="height:8px"></i><i style="height:14px"></i> 0:12</div></div>
+   </div>
+  </div></div>
+  <div class="phone"><div class="scr">
+   <div class="hd"><div class="av">🏥</div><strong>Ficha de atención</strong></div>
+   <div class="msgs">
+    <div class="b me">Quiero ficha para hoy</div>
+    <div class="b">🎫 <strong>Su ficha: Nº 27</strong><br>🚶 Faltan 9 personas<br>⏱️ Llegue a las 10:40
+     <small>Ya no necesita hacer fila de madrugada</small></div>
+    <div class="b">🔔 <strong>Falta poco.</strong> Venga ahora al mostrador 3.</div>
+   </div>
+  </div></div>
+ </div>
+</section>
+
+<section id="s5">
+ <div class="t">
+  <h2>Encontrar ayuda cerca y llamar con un toque</h2>
+  <p>Al enviar su <strong>ubicación 📍</strong>, el agente muestra los centros más cercanos con foto de la fachada, distancia y si están abiertos.</p>
+  <p>Cada respuesta incluye el botón de <strong>llamar al call center</strong> y, si hay síntomas graves, el botón rojo de <strong>emergencias</strong> con el centro de urgencias más cercano.</p>
+ </div>
+ <div class="v">
+  <div class="phone"><div class="scr">
+   <div class="hd"><div class="av">📍</div><strong>Centros cercanos</strong></div>
+   <div class="msgs">
+    <div class="b me">📍 Ubicación enviada</div>
+    <div class="b">🏥 <strong>Centro de Salud Norte</strong><br>🚶 800 m · 🟢 Abierto
+     <span class="btn">📞 Llamar</span><span class="btn">🗺️ Cómo llegar</span></div>
+    <div class="b">🏥 <strong>Hospital General</strong><br>🚗 2,3 km · 🟢 24 horas
+     <span class="btn">📞 Llamar</span><span class="btn">🗺️ Cómo llegar</span></div>
+   </div>
+  </div></div>
+  <div class="phone"><div class="scr">
+   <div class="hd" style="background:#b3261e"><div class="av">🚑</div><strong>Emergencia</strong></div>
+   <div class="msgs">
+    <div class="b me"><div class="voz">▶ <i style="height:14px"></i><i style="height:20px"></i><i style="height:12px"></i><i style="height:18px"></i> 0:05</div><small>"Me duele mucho el pecho"</small></div>
+    <div class="b">🚨 <strong>Esto puede ser urgente.</strong> No espere cita.
+     <span class="btn r">📞 Llamar a emergencias</span><span class="btn r">🏥 Urgencias más cercanas</span></div>
+   </div>
+  </div></div>
+ </div>
+</section>
+
+<section id="s6">
+ <div class="t col">
+  <h2>Módulos del sistema</h2>
+  <div class="grid" style="width:100%">
+   <div class="c idn" style="grid-column:1/-1;display:flex;gap:22px;align-items:center;flex-wrap:wrap">
+    <div style="flex:1;min-width:230px"><h3>Identidad y perfil</h3><p>El paciente se registra <strong>hablando</strong>: envía un audio con su nombre y documento, o hace una <strong>llamada por WhatsApp</strong> y el agente de IA le hace las preguntas con voz. Sin escribir nada. Se guarda su perfil de accesibilidad y el consentimiento, también dado por audio.</p></div>
+    <div class="phone" style="width:250px;flex:none"><div class="scr" style="min-height:0">
+     <div class="hd"><div class="av">🪪</div><strong>Registro por voz</strong></div>
+     <div class="msgs">
+      <div class="b">👋 Bienvenido. Cuénteme por audio: <strong>su nombre y su número de carnet</strong>.</div>
+      <div class="b me"><div class="voz">▶ <i style="height:10px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:9px"></i><i style="height:15px"></i> 0:08</div><small>"Me llamo María Quispe..."</small></div>
+      <div class="b">✅ <strong>María Quispe</strong> 🪪 Registrada
+       <span class="btn">📞 Prefiero que me llamen por WhatsApp</span></div>
+      <div class="b" style="background:#d9f2e3">📞 <strong>Llamada de WhatsApp</strong> · Asistente · 🔊 en curso</div>
+     </div>
+    </div></div>
+   </div>
+   <div class="c"><h3>Centros cercanos</h3><p>Geolocalización, lista, distancia y horarios.</p></div>
+   <div class="c"><h3>Call center y chat</h3><p>Llamada directa, chat con personal, directorio por área.</p></div>
+   <div class="c"><h3>Citas</h3><p>Especialidad, médico, hora; reprogramar y cancelar.</p></div>
+   <div class="c"><h3>Fichas</h3><p>Turno, posición en cola y aviso cuando se acerca.</p></div>
+   <div class="c"><h3>Notificaciones</h3><p>Audio, imagen y mensaje corto; repetición automática.</p></div>
+   <div class="c"><h3>Agentes de IA</h3><p>Voz, orientación, agendamiento y traspaso humano.</p></div>
+   <div class="c"><h3>Emergencias</h3><p>Detección de síntomas graves y acceso inmediato.</p></div>
+   <div class="c a"><h3>👁️ Personas no videntes</h3><p>Todo por audio, mensajes breves y claros, compatible con lectores de pantalla.</p></div>
+   <div class="c a"><h3>🤟 Personas sordas</h3><p>Todo por texto e imágenes, sin llamadas obligatorias; videollamada con intérprete de señas.</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="s7">
+ <div class="t col">
+  <h2>Seguridad, reglas y camino a seguir</h2>
+  <ul>
+   <li><strong>La IA no diagnostica ni receta.</strong> Orienta y deriva.</li>
+   <li>Datos de salud protegidos: cifrado, consentimiento por audio y mínimo de datos al modelo.</li>
+   <li>Una persona del hospital puede tomar la conversación en cualquier momento.</li>
+   <li>Pruebas con pacientes reales, con ayuda de familiares y personas con discapacidad.</li>
+  </ul>
+  <div class="road">
+   <div class="c"><h3>Fase 1 · MVP (3–4 meses)</h3><p>WhatsApp con audio: centros cercanos, llamada, citas, fichas y recordatorios.</p></div>
+   <div class="c"><h3>Fase 2</h3><p>Orientación con IA, lenguas locales, videollamada con intérprete.</p></div>
+   <div class="c"><h3>Fase 3</h3><p>Resultados, recetas, telemedicina y predicción de ausentismo.</p></div>
+   <div class="c a"><h3>Cómo medir el éxito</h3><p>Menos filas, menos ausencias, más pacientes atendidos y satisfacción por audio.</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="s8"><div class="dg">
+<h2>Estructura de toda la solución</h2>
+<div class="row">
+ <div class="col2"><h3>1 · Pacientes</h3><div class="nd y"><b>🎙️</b><div><strong>Audio</strong>Habla y escucha</div></div><div class="nd y"><b>📞</b><div><strong>Llamada WhatsApp</strong>Voz con el agente</div></div><div class="nd y"><b>📍</b><div><strong>Ubicación</strong>Centros cercanos</div></div><div class="nd y"><b>🤟</b><div><strong>Texto e imágenes</strong>Personas sordas</div></div><div class="nd y"><b>👁️</b><div><strong>Solo voz</strong>Personas no videntes</div></div><div class="nd y"><b>👪</b><div><strong>Familiar</strong>Ayuda al paciente</div></div></div>
+ <div class="ar">➜</div>
+ <div class="col2"><h3>2 · Canal</h3><div class="nd g"><b>💬</b><div><strong>WhatsApp Business</strong>Un solo número del hospital</div></div><div class="nd g"><b>🔊</b><div><strong>Voz a texto</strong>Español y lenguas locales</div></div><div class="nd g"><b>🗣️</b><div><strong>Texto a voz</strong>Respuestas en audio</div></div><div class="nd g"><b>🖼️</b><div><strong>Tarjetas con imagen</strong>Botones grandes, íconos</div></div></div>
+ <div class="ar">➜</div>
+ <div class="col2 core"><h3>3 · Cerebro: agentes de IA</h3><div class="nd g"><b>🧭</b><div><strong>Orquestador</strong>Reparte cada pedido</div></div><div class="nd g"><b>🩺</b><div><strong>Orientación</strong>No diagnostica; detecta urgencias</div></div><div class="nd g"><b>📅</b><div><strong>Citas y fichas</strong>Reserva, turno, recordatorios</div></div><div class="nd g"><b>📍</b><div><strong>Ubicación</strong>Cercanía y cómo llegar</div></div><div class="nd g"><b>🪪</b><div><strong>Identidad</strong>Registro por voz</div></div><div class="nd g"><b>🚨</b><div><strong>Emergencias</strong>Alerta inmediata</div></div></div>
+ <div class="ar">➜</div>
+ <div class="col2"><h3>4 · Hospital</h3><div class="nd g"><b>🏥</b><div><strong>Sistema del hospital</strong>Médicos, agenda, historia (HL7 FHIR)</div></div><div class="nd g"><b>🎫</b><div><strong>Fichas y cupos</strong>Cola en tiempo real</div></div><div class="nd g"><b>☎️</b><div><strong>Call center</strong>Llamada con un toque</div></div><div class="nd g"><b>🧑‍💼</b><div><strong>Personal humano</strong>Toma el chat cuando hace falta</div></div><div class="nd g"><b>🗺️</b><div><strong>Mapas</strong>Distancia y rutas</div></div></div>
+</div>
+<div class="base"><div>🔒 <strong>Seguridad:</strong> cifrado y consentimiento por audio</div><div>📝 <strong>Auditoría:</strong> revisión clínica de las conversaciones</div><div>📊 <strong>Indicadores:</strong> filas, ausencias y satisfacción</div><div>♿ <strong>Accesibilidad:</strong> en todos los módulos</div></div>
+</div></section>
+</div>
+<div class="nav"><button id="p" aria-label="Anterior">←</button><span id="c"></span><button id="n" aria-label="Siguiente">→</button></div>
+<script>
+const s=[...document.querySelectorAll('section')],st=document.getElementById('st'),c=document.getElementById('c');
+let i=0;try{i=(+location.hash.slice(1)-1)||0}catch(e){}
+function show(k){i=Math.max(0,Math.min(s.length-1,k));s.forEach((x,j)=>x.classList.toggle('on',j===i));c.textContent=(i+1)+' / '+s.length;try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+function fit(){const k=Math.min(innerWidth/1280,innerHeight/720);st.style.transform='translate(-50%,-50%) scale('+k+')'}
+document.getElementById('n').onclick=()=>show(i+1);
+document.getElementById('p').onclick=()=>show(i-1);
+addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}});
+addEventListener('resize',fit);fit();show(i);
+</script>
+</body>
+</html>
